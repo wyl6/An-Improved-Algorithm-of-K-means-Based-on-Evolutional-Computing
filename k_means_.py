@@ -15,8 +15,8 @@ from __future__ import division
 import warnings
 
 import numpy as np
+#np.random.seed(1)
 import scipy.sparse as sp
-
 from ..base import BaseEstimator, ClusterMixin, TransformerMixin
 from ..metrics.pairwise import euclidean_distances
 from ..metrics.pairwise import pairwise_distances_argmin_min
@@ -92,7 +92,10 @@ def _k_init(X, n_clusters, x_squared_norms, random_state, n_local_trials=None):
         n_local_trials = 2 + int(np.log(n_clusters))
 
     # Pick first center randomly
+#    print('random_state', random_state)
     center_id = random_state.randint(n_samples)
+#    center_id = 31 # 139, 67
+#    print('first center', center_id)
     if sp.issparse(X):
         centers[0] = X[center_id].toarray()
     else:
@@ -658,57 +661,57 @@ def _kmeans_single_lloyd(X, sample_weight, n_clusters, max_iter=300,
         ######################################################################
         # todo: KSAJ
         ######################################################################
-#        for i in range(try_number):
-#            
-#            new_centers = min_col+del_col * np.random.random((c_row, c_col))
-#        #            new_centers = min_col+del_col * np.random.random_sample((c_row, c_col)) # performance bad
-#        #            new_centers = min_col+del_col * np.random.uniform(0.0, 1.0, (c_row, c_col)) # performance bad
-#        #            new_centers = min_col+del_col * np.random.rand(c_row, c_col)
-##            new_centers = centers_old+(new_centers-centers_old) * 0.5 # KFAJ
-#            new_labels, new_inertia = _labels_inertia(X, sample_weight, x_squared_norms, new_centers,
-#                            precompute_distances=precompute_distances,distances=new_distances)
-#            if(new_inertia<b_inertia):
-#                b_inertia = new_inertia
-#                b_centers = new_centers
-#                b_labels = new_labels
-#                
-#            de = new_inertia-inertia
-#                
-#            if(judge(de, tmp)):
-##                labels = new_labels.copy()
-##                inertia = new_inertia.copy()
-##                distances = new_distances.copy()
-##                centers_old = new_centers.copy()
-#                final_centers = centers_old+(new_centers-centers_old)*0.1
-#                final_labels, final_inertia = _labels_inertia(X, sample_weight, x_squared_norms, final_centers,
-#                                precompute_distances=precompute_distances,distances=final_distances)
-#                
-#                if(final_inertia<b_inertia):
-#                    b_inertia = final_inertia
-#                    b_centers = final_centers
-#                    b_labels = final_labels
-#                    
-#                labels = final_labels.copy()
-#                inertia = final_inertia.copy()
-#                distances = final_distances.copy()
-#                centers_old = final_centers.copy()
-#            else:
-#                final_centers = centers_old+(centers_old-new_centers)*0.35
-#                final_labels, final_inertia = _labels_inertia(X, sample_weight, x_squared_norms, final_centers,
-#                                precompute_distances=precompute_distances,distances=final_distances)
-#                
-#                if(final_inertia<b_inertia):
-#                    b_inertia = final_inertia
-#                    b_centers = final_centers
-#                    b_labels = final_labels
-#                
-#                if(final_inertia < inertia):
-#                    labels = final_labels.copy()
-#                    inertia = final_inertia.copy()
-#                    distances = final_distances.copy()
-#                    centers_old = final_centers.copy()
-#            if(de < 0):
-#                tmp = tmp*alpha
+        for i in range(try_number):
+            
+            new_centers = min_col+del_col * np.random.random((c_row, c_col))
+        #            new_centers = min_col+del_col * np.random.random_sample((c_row, c_col)) # performance bad
+        #            new_centers = min_col+del_col * np.random.uniform(0.0, 1.0, (c_row, c_col)) # performance bad
+        #            new_centers = min_col+del_col * np.random.rand(c_row, c_col)
+#            new_centers = centers_old+(new_centers-centers_old) * 0.5 # KFAJ
+            new_labels, new_inertia = _labels_inertia(X, sample_weight, x_squared_norms, new_centers,
+                            precompute_distances=precompute_distances,distances=new_distances)
+            if(new_inertia<b_inertia):
+                b_inertia = new_inertia
+                b_centers = new_centers
+                b_labels = new_labels
+                
+            de = new_inertia-inertia
+                
+            if(judge(de, tmp)):
+#                labels = new_labels.copy()
+#                inertia = new_inertia.copy()
+#                distances = new_distances.copy()
+#                centers_old = new_centers.copy()
+                final_centers = centers_old+(new_centers-centers_old)*0.1
+                final_labels, final_inertia = _labels_inertia(X, sample_weight, x_squared_norms, final_centers,
+                                precompute_distances=precompute_distances,distances=final_distances)
+                
+                if(final_inertia<b_inertia):
+                    b_inertia = final_inertia
+                    b_centers = final_centers
+                    b_labels = final_labels
+                    
+                labels = final_labels.copy()
+                inertia = final_inertia.copy()
+                distances = final_distances.copy()
+                centers_old = final_centers.copy()
+            else:
+                final_centers = centers_old+(centers_old-new_centers)*0.35
+                final_labels, final_inertia = _labels_inertia(X, sample_weight, x_squared_norms, final_centers,
+                                precompute_distances=precompute_distances,distances=final_distances)
+                
+                if(final_inertia<b_inertia):
+                    b_inertia = final_inertia
+                    b_centers = final_centers
+                    b_labels = final_labels
+                
+                if(final_inertia < inertia):
+                    labels = final_labels.copy()
+                    inertia = final_inertia.copy()
+                    distances = final_distances.copy()
+                    centers_old = final_centers.copy()
+            if(de < 0):
+                tmp = tmp*alpha
         ######################################################################
         ######################################################################
         
@@ -717,7 +720,6 @@ def _kmeans_single_lloyd(X, sample_weight, n_clusters, max_iter=300,
         ######################################################################
         # todo: KFJ
         ######################################################################
-#        try_number = 10
 #        for i in range(try_number):
 #            new_centers = min_col+del_col * np.random.random((c_row, c_col))
 ##            new_centers = centers_old+(new_centers-centers_old) * (2*np.random.random((c_row, c_col))-1) # sometimes bad
@@ -1016,16 +1018,17 @@ def _init_centroids(X, k, init, random_state=None, x_squared_norms=None,
     elif n_samples < k:
         raise ValueError(
             "n_samples=%d should be larger than k=%d" % (n_samples, k))
-
     if isinstance(init, string_types) and init == 'k-means++':
         centers = _k_init(X, k, random_state=random_state,
                           x_squared_norms=x_squared_norms)
+    ######################################################################
     elif isinstance(init, string_types) and init == 'random':
         ######################################################################
         # todo: randomly choose centres to better compare the performance
 #        of new proposed algorithm and initial K-means
         ######################################################################
-        seeds = [1,2,3]
+        hello = None
+        seeds = [13,31,131]
         ######################################################################
         ######################################################################
 #        seeds = random_state.permutation(n_samples)[:k]
@@ -1190,7 +1193,7 @@ class KMeans(BaseEstimator, ClusterMixin, TransformerMixin):
 
     """
 
-    def __init__(self, n_clusters=8, y=None, init='random', n_init=1,
+    def __init__(self, n_clusters=8, y=None, init='k-means++', n_init=1,
                  max_iter=300, tol=1e-4, precompute_distances='auto',
                  verbose=0, random_state=None, copy_x=True,
                  n_jobs=None, algorithm='full'):
