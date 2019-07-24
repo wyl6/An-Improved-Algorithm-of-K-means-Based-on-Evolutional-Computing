@@ -41,13 +41,13 @@ warnings.filterwarnings(action="ignore")
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 # Load dataset
 ###############################################################################
+#
+#data = np.load('../data/glass_new.npy') # jaya, very good
+#X,y = data[:,:9],data[:,9]
+#y = np.int32(y)
 
-data = np.load('../data/glass_new.npy') # jaya, very good
-X,y = data[:,:9],data[:,9]
-y = np.int32(y)
-
-#iris = load_iris()
-#X, y = iris['data'], iris['target'] # simulated annealing, very good
+iris = load_iris()
+X, y = iris['data'], iris['target'] # simulated annealing, very good
 
 ##############################################################################
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
@@ -78,8 +78,9 @@ for i in range(iters):
 #    print(y)
 #    print(labels)
 #    print(prediction)
+#    print(type(y), type(prediction))
     C = kmeans.cluster_centers_
-#    print(C)
+#    print('C', C)
     error = -kmeans.score(X)
     acc = accuracy_score(y, prediction)
 #    print('acc', acc)
@@ -89,11 +90,11 @@ for i in range(iters):
 #    print('labels', labels)
 #    print('predictoin', prediction)
     avg_error += error
-    avg_sil += silhouette_score(X, labels, metric='euclidean')
-    avg_ri += adjusted_rand_score(y, labels)
-    avg_mi += adjusted_mutual_info_score(y, labels)
-    avg_hom += homogeneity_score(y, labels)
-    db = davies_bouldin_score(X, labels)
+    avg_sil += silhouette_score(X, prediction, metric='euclidean')
+    avg_ri += adjusted_rand_score(y, prediction)
+    avg_mi += adjusted_mutual_info_score(y, prediction)
+    avg_hom += homogeneity_score(y, prediction)
+    db = davies_bouldin_score(X, prediction)
     avg_db += db
     if(acc>best_acc):
         best_acc = acc
@@ -117,4 +118,118 @@ print('sil_index', avg_sil/iters) # higher better
 #print('hom_index', avg_hom)
 #print('best_acc', best_acc)
 #print('best_db', best_db)
+
+'''
+kmeans++
+time 1.123659610748291
+acc 0.8832000000000003
+error 80.79761855092566
+db_index 0.6564794004938124
+ri_index 0.7174068435573223
+mi_index 0.7336306340288832
+sil_index 0.5557758156445205
+
+time 1.1151678562164307
+acc 0.8828666666666675
+error 80.79782977091718
+db_index 0.6566827521269175
+ri_index 0.716712035577341
+mi_index 0.7328679180391363
+sil_index 0.5556944452576794
+
+time 1.1571311950683594
+acc 0.8852000000000005
+error 80.13177502353186
+db_index 0.6592188688935734
+ri_index 0.7187541616019649
+mi_index 0.7353105771142556
+sil_index 0.5544284477664942
+
+time 1.1466662883758545
+acc 0.8809333333333336
+error 81.4096584690157
+db_index 0.6541073123423782
+ri_index 0.7153298234882406
+mi_index 0.7310962663866316
+sil_index 0.5569817796639341
+
+time 1.123753309249878
+acc 0.8825333333333342
+error 80.79804099090872
+db_index 0.6568861037600224
+ri_index 0.71601722759736
+mi_index 0.7321052020493889
+sil_index 0.5556130748708386
+
+time 1.1793007850646973
+acc 0.8831333333333338
+error 80.7706745022755
+db_index 0.6566224202913549
+ri_index 0.7171809541410991
+mi_index 0.733355964948393
+sil_index 0.5557213877925825
+
+kmeans++ KSJ
+time 6.718405485153198
+acc 0.8891333333333341
+error 78.85410279803956
+db_index 0.6645337770778734
+ri_index 0.721483691735708
+mi_index 0.7387621718521323
+sil_index 0.5517937454822135
+
+kmeans++ KSAJ
+time 53.22230863571167
+acc 0.8893333333333342
+error 78.8539760660446
+db_index 0.6644117660980107
+ri_index 0.7219005765236965
+mi_index 0.7392198014459808
+sil_index 0.5518425677143179
+
+kmeans++ KFJ
+time 6.180590629577637
+acc 0.8874000000000011
+error 79.4927910567916
+db_index 0.6617339768425502
+ri_index 0.7206052922548232
+mi_index 0.7375702756760174
+sil_index 0.5531680558951425
+
+kmeans++ KFAJ
+time 204.97144484519958
+acc 0.8929999999999988
+error 78.85165264613761
+db_index 0.662174898133857
+ri_index 0.7295434643034896
+mi_index 0.7476096773332008
+sil_index 0.5527376419695679
+
+'''
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
